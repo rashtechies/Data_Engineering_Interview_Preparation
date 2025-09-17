@@ -1,0 +1,99 @@
+1) Histogram of Tweets
+We have to find the number of users posted in tweeter in 2022
+
+tweet count per user--tweet_id and number of tweeter user --user_id
+
+group the user_id
+
+counrt
+
+
+-- SELECT 
+--   tweet_count_per_user AS tweet_bucket, 
+--   COUNT(user_id) AS users_num 
+-- FROM (
+--   SELECT 
+--     user_id, 
+--     COUNT(tweet_id) AS tweet_count_per_user 
+--   FROM tweets 
+--   WHERE tweet_date BETWEEN '2022-01-01' 
+--     AND '2022-12-31'
+--   GROUP BY user_id) AS total_tweets 
+-- GROUP BY tweet_count_per_user;
+
+WITH count_tweets AS
+(SELECT user_id AS user, COUNT(tweet_id) AS number
+FROM tweets
+WHERE EXTRACT(year FROM tweet_date) = '2022'
+GROUP BY user_id)
+
+SELECT number AS tweet_bucket,
+      COUNT(user) AS users_num
+FROM count_tweets
+GROUP BY number;
+
+2) Data Science Skills
+LinkedIn SQL Interview Question
+
+
+
+SELECT candidate_id FROM candidates WHERE skill = 'Python'
+INTERSECT 
+SELECT candidate_id FROM candidates WHERE skill = 'Tableau'
+INTERSECT  
+SELECT candidate_id FROM candidates WHERE skill = 'PostgreSQL'
+ORDER BY 1;
+
+
+SELECT candidate_id
+FROM candidates
+WHERE skill IN ('Python', 'Tableau', 'PostgreSQL')
+GROUP BY candidate_id
+HAVING COUNT(skill) = 3
+ORDER BY candidate_id;
+
+SELECT candidate_id 
+FROM candidates
+GROUP BY candidate_id 
+HAVING COUNT(CASE WHEN skill in ('Python','Tableau','PostgreSQL') THEN 1
+ELSE NULL END)=3 
+ORDER BY candidate_id
+
+3) Page With No Likes
+Facebook SQL Interview Question
+
+
+SELECT pages.page_id
+FROM pages
+LEFT OUTER JOIN page_likes AS likes
+  ON pages.page_id = likes.page_id
+WHERE likes.page_id IS NULL
+order by page_id;
+
+SELECT page_id
+FROM pages
+EXCEPT
+SELECT page_id
+FROM page_likes
+order by page_id;
+
+
+SELECT page_id
+FROM pages
+WHERE page_id NOT IN (
+  SELECT page_id
+  FROM page_likes
+  WHERE page_id IS NOT NULL
+)
+order by page_id;
+
+
+
+SELECT page_id
+FROM pages
+WHERE NOT EXISTS (
+  SELECT page_id
+  FROM page_likes AS likes
+  WHERE likes.page_id = pages.page_id
+)
+order by page_id;

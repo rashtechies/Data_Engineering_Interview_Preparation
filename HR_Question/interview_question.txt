@@ -1,0 +1,3 @@
+Rajesh is an IAM business analyst with a knack for understanding the business processes of clients and translating them into IAM requirements.
+
+knack --A special talent or skill, especially one difficult to explain or teach.
